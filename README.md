@@ -1,10 +1,3 @@
-Below are two separate files:
-
----
-
-## README.md
-
-```markdown
 # Job App
 
 This Flutter application helps you automatically scrape job offers from multiple sources, review the listings in one place, and submit applications with minimal manual work. It supports iOS, Android, and Windows platforms.
@@ -53,7 +46,3 @@ This Flutter application helps you automatically scrape job offers from multiple
 
 ## License
 This project is licensed under the [MIT License](LICENSE).
-```
-
----
-
