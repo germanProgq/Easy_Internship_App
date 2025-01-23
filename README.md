@@ -15,7 +15,7 @@ This project consists of two main parts:
 Easy_Internship_App/
 ├── backend/
 │   ├── ... (Backend source files)
-│   ├── package.json (If Node.js)
+│   ├── package.json
 │   └── ...
 └── frontend/
     ├── pubspec.yaml
@@ -38,7 +38,7 @@ Easy_Internship_App/
    ```bash
    git clone https://github.com/germanProgq/Easy_Internship_App.git
    ```
-2. **Install dependencies** (in the `frontend/` directory):
+2. **Install dependencies** (in the `frontend` directory):
    ```bash
    cd Resume_App/Resume_App__Frontend
    flutter pub get
@@ -65,7 +65,6 @@ Easy_Internship_App/
 ### Requirements
 Depending on your choice of backend technology (Node.js, Python, etc.), you will have different requirements, for example:
 - **Node.js & npm** (If using Express or a similar Node framework), or
-- **Python 3 & pip** (If using Django, Flask, or FastAPI).
 
 ### Getting Started (Backend)
 
