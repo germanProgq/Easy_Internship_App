@@ -1,0 +1,572 @@
+[
+  {
+    "name": {
+      "name": {
+        "name": "A1 Report",
+        "domain": "a1.com"
+      },
+      "domain": null
+    },
+    "domain": null
+  },
+  {
+    "name": {
+      "name": {
+        "name": "ABC News",
+        "domain": "abc.ai"
+      },
+      "domain": null
+    },
+    "domain": null
+  },
+  {
+    "name": {
+      "name": {
+        "name": "Ada Air",
+        "domain": "adaair.com"
+      },
+      "domain": null
+    },
+    "domain": null
+  },
+  {
+    "name": {
+      "name": {
+        "name": "Air Albania",
+        "domain": "air.net"
+      },
+      "domain": null
+    },
+    "domain": null
+  },
+  {
+    "name": {
+      "name": {
+        "name": "Albanian Airlines",
+        "domain": "albanian.com"
+      },
+      "domain": null
+    },
+    "domain": null
+  },
+  {
+    "name": {
+      "name": {
+        "name": "Albanian Screen",
+        "domain": "albanian.com"
+      },
+      "domain": null
+    },
+    "domain": null
+  },
+  {
+    "name": {
+      "name": {
+        "name": "Albanian-American Enterprise Fund",
+        "domain": "www.aadf.org"
+      },
+      "domain": null
+    },
+    "domain": null
+  },
+  {
+    "name": {
+      "name": {
+        "name": "Albatros Airways",
+        "domain": "albatros.net"
+      },
+      "domain": null
+    },
+    "domain": null
+  },
+  {
+    "name": {
+      "name": {
+        "name": "Albawings",
+        "domain": "albawings.com"
+      },
+      "domain": null
+    },
+    "domain": null
+  },
+  {
+    "name": {
+      "name": {
+        "name": "AlbChrome",
+        "domain": "en.wikipedia.org"
+      },
+      "domain": null
+    },
+    "domain": null
+  },
+  {
+    "name": {
+      "name": {
+        "name": "Albanian Mobile Communications",
+        "domain": "albanian.com"
+      },
+      "domain": null
+    },
+    "domain": null
+  },
+  {
+    "name": {
+      "name": {
+        "name": "Albanian Power Corporation",
+        "domain": "albanian.com"
+      },
+      "domain": null
+    },
+    "domain": null
+  },
+  {
+    "name": {
+      "name": {
+        "name": "Albcontrol",
+        "domain": null
+      },
+      "domain": null
+    },
+    "domain": null
+  },
+  {
+    "name": {
+      "name": {
+        "name": "Albpetrol",
+        "domain": "albpetrol.info"
+      },
+      "domain": null
+    },
+    "domain": null
+  },
+  {
+    "name": {
+      "name": {
+        "name": "Albtelecom",
+        "domain": "albtelecom.fr"
+      },
+      "domain": null
+    },
+    "domain": null
+  },
+  {
+    "name": {
+      "name": {
+        "name": "Antea Cement",
+        "domain": "anteacement.com"
+      },
+      "domain": null
+    },
+    "domain": null
+  },
+  {
+    "name": {
+      "name": {
+        "name": "Balfin Group",
+        "domain": "balfin.ca"
+      },
+      "domain": null
+    },
+    "domain": null
+  },
+  {
+    "name": {
+      "name": {
+        "name": "Bank of Albania",
+        "domain": "bank.org"
+      },
+      "domain": null
+    },
+    "domain": null
+  },
+  {
+    "name": {
+      "name": {
+        "name": "Banka Kombëtare Tregtare",
+        "domain": "banka.co"
+      },
+      "domain": null
+    },
+    "domain": null
+  },
+  {
+    "name": {
+      "name": {
+        "name": "Belle Air",
+        "domain": "belle.io"
+      },
+      "domain": null
+    },
+    "domain": null
+  },
+  {
+    "name": {
+      "name": {
+        "name": "Big Market",
+        "domain": "big-market.de"
+      },
+      "domain": null
+    },
+    "domain": null
+  },
+  {
+    "name": {
+      "name": {
+        "name": "Birra Kaon",
+        "domain": "birra.tech"
+      },
+      "domain": null
+    },
+    "domain": null
+  },
+  {
+    "name": {
+      "name": {
+        "name": "Birra Korça",
+        "domain": "birra.tech"
+      },
+      "domain": null
+    },
+    "domain": null
+  },
+  {
+    "name": {
+      "name": {
+        "name": "Birra Tirana",
+        "domain": "birra.tech"
+      },
+      "domain": null
+    },
+    "domain": null
+  },
+  {
+    "name": {
+      "name": {
+        "name": "Coca-Cola Bottling Shqipëria",
+        "domain": "cocacola.com"
+      },
+      "domain": null
+    },
+    "domain": null
+  },
+  {
+    "name": {
+      "name": {
+        "name": "Credins Bank",
+        "domain": "credinsbank.org"
+      },
+      "domain": null
+    },
+    "domain": null
+  },
+  {
+    "name": {
+      "name": {
+        "name": "Digitalb",
+        "domain": "digitalb.net"
+      },
+      "domain": null
+    },
+    "domain": null
+  },
+  {
+    "name": {
+      "name": {
+        "name": "Eagle Mobile",
+        "domain": "eagle.net"
+      },
+      "domain": null
+    },
+    "domain": null
+  },
+  {
+    "name": {
+      "name": {
+        "name": "Eco Market",
+        "domain": "ecomarket.com"
+      },
+      "domain": null
+    },
+    "domain": null
+  },
+  {
+    "name": {
+      "name": {
+        "name": "Electric Power Distribution Operator",
+        "domain": "electric.com"
+      },
+      "domain": null
+    },
+    "domain": null
+  },
+  {
+    "name": {
+      "name": {
+        "name": "Hekurudha Shqiptare",
+        "domain": "hekurudhashqiptare.wordpress.com"
+      },
+      "domain": null
+    },
+    "domain": null
+  },
+  {
+    "name": {
+      "name": {
+        "name": "Ferlut SH. a.",
+        "domain": "en.wikipedia.org"
+      },
+      "domain": null
+    },
+    "domain": null
+  },
+  {
+    "name": {
+      "name": {
+        "name": "Civil Aviation Authority (Albania)",
+        "domain": "civil.com"
+      },
+      "domain": null
+    },
+    "domain": null
+  },
+  {
+    "name": {
+      "name": {
+        "name": "Intesa Sanpaolo Bank Albania",
+        "domain": "intesa.net"
+      },
+      "domain": null
+    },
+    "domain": null
+  },
+  {
+    "name": {
+      "name": {
+        "name": "MEICO",
+        "domain": "meico.co"
+      },
+      "domain": null
+    },
+    "domain": null
+  },
+  {
+    "name": {
+      "name": {
+        "name": "Neptun Electronics",
+        "domain": "neptun.fr"
+      },
+      "domain": null
+    },
+    "domain": null
+  },
+  {
+    "name": {
+      "name": {
+        "name": "News 24",
+        "domain": "news-24.org"
+      },
+      "domain": null
+    },
+    "domain": null
+  },
+  {
+    "name": {
+      "name": {
+        "name": "Plus Communication",
+        "domain": "pluscommunication.eu"
+      },
+      "domain": null
+    },
+    "domain": null
+  },
+  {
+    "name": {
+      "name": {
+        "name": "Port of Durrës",
+        "domain": "port.eu"
+      },
+      "domain": null
+    },
+    "domain": null
+  },
+  {
+    "name": {
+      "name": {
+        "name": "Posta Shqiptare",
+        "domain": "posta.co"
+      },
+      "domain": null
+    },
+    "domain": null
+  },
+  {
+    "name": {
+      "name": {
+        "name": "Raiffeisen Albania",
+        "domain": "raiffeisen.uk"
+      },
+      "domain": null
+    },
+    "domain": null
+  },
+  {
+    "name": {
+      "name": {
+        "name": "Radio Televizioni Shqiptar",
+        "domain": "radio.net"
+      },
+      "domain": null
+    },
+    "domain": null
+  },
+  {
+    "name": {
+      "name": {
+        "name": "SIGAL",
+        "domain": "sigal.net"
+      },
+      "domain": null
+    },
+    "domain": null
+  },
+  {
+    "name": {
+      "name": {
+        "name": "Star Airways",
+        "domain": "star.org"
+      },
+      "domain": null
+    },
+    "domain": null
+  },
+  {
+    "name": {
+      "name": {
+        "name": "SuperSport Albania",
+        "domain": "supersport.com"
+      },
+      "domain": null
+    },
+    "domain": null
+  },
+  {
+    "name": {
+      "name": {
+        "name": "Taçi Oil",
+        "domain": "tai.com"
+      },
+      "domain": null
+    },
+    "domain": null
+  },
+  {
+    "name": {
+      "name": {
+        "name": "Tafa Air",
+        "domain": "tafa.net"
+      },
+      "domain": null
+    },
+    "domain": null
+  },
+  {
+    "name": {
+      "name": {
+        "name": "Telekom Albania",
+        "domain": "telekom.com"
+      },
+      "domain": null
+    },
+    "domain": null
+  },
+  {
+    "name": {
+      "name": {
+        "name": "TIMAK (Albania)",
+        "domain": "timak.net"
+      },
+      "domain": null
+    },
+    "domain": null
+  },
+  {
+    "name": {
+      "name": {
+        "name": "Tirana Bank",
+        "domain": "tirana.io"
+      },
+      "domain": null
+    },
+    "domain": null
+  },
+  {
+    "name": {
+      "name": {
+        "name": "Top Channel",
+        "domain": "top-channel.com"
+      },
+      "domain": null
+    },
+    "domain": null
+  },
+  {
+    "name": {
+      "name": {
+        "name": "TV Klan",
+        "domain": "tvklan.com"
+      },
+      "domain": null
+    },
+    "domain": null
+  },
+  {
+    "name": {
+      "name": {
+        "name": "Union Bank (Albania)",
+        "domain": "union.co"
+      },
+      "domain": null
+    },
+    "domain": null
+  },
+  {
+    "name": {
+      "name": {
+        "name": "United Bank of Albania",
+        "domain": "united.net"
+      },
+      "domain": null
+    },
+    "domain": null
+  },
+  {
+    "name": {
+      "name": {
+        "name": "Vizion Plus",
+        "domain": "vizionplus.com"
+      },
+      "domain": null
+    },
+    "domain": null
+  },
+  {
+    "name": {
+      "name": {
+        "name": "Vodafone Albania",
+        "domain": "vodafone.tech"
+      },
+      "domain": null
+    },
+    "domain": null
+  },
+  {
+    "name": {
+      "name": {
+        "name": "Category:Albanian brands",
+        "domain": null
+      },
+      "domain": null
+    },
+    "domain": null
+  }
+]

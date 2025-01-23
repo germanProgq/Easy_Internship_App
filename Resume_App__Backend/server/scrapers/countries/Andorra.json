@@ -1,0 +1,72 @@
+[
+  {
+    "name": {
+      "name": {
+        "name": "Andbank",
+        "domain": "andbank.com"
+      },
+      "domain": null
+    },
+    "domain": null
+  },
+  {
+    "name": {
+      "name": {
+        "name": "Andorra Telecom",
+        "domain": "andorra.com"
+      },
+      "domain": null
+    },
+    "domain": null
+  },
+  {
+    "name": {
+      "name": {
+        "name": "Banca Privada d'Andorra",
+        "domain": "banca.dev"
+      },
+      "domain": null
+    },
+    "domain": null
+  },
+  {
+    "name": {
+      "name": {
+        "name": "Crèdit Andorrà",
+        "domain": "crdit.com"
+      },
+      "domain": null
+    },
+    "domain": null
+  },
+  {
+    "name": {
+      "name": {
+        "name": "Grans Magatzems Pyrénées",
+        "domain": "grans.us"
+      },
+      "domain": null
+    },
+    "domain": null
+  },
+  {
+    "name": {
+      "name": {
+        "name": "Mora Banc Grup",
+        "domain": "mora.com"
+      },
+      "domain": null
+    },
+    "domain": null
+  },
+  {
+    "name": {
+      "name": {
+        "name": "PGI Management",
+        "domain": "pgi.dev"
+      },
+      "domain": null
+    },
+    "domain": null
+  }
+]
