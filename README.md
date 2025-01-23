@@ -16,7 +16,7 @@ This Flutter application helps you automatically scrape job offers from multiple
 ## Getting Started
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/your-username/job-app.git
+   git clone https://github.com/germanProgq/Easy_Internship_App.git
    cd job-app
    ```
 2. **Install dependencies**:
