@@ -1,10 +1,10 @@
+// lib/ui/pages/login_page.dart
+
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../../app/context/user.dart';
 
-/// A login page so premium, it's basically priceless.
-/// Features multi-layer, realistic wave motion, a 3D flip
-/// between Sign In and Sign Up, shimmering titles, and
-/// static background decorations (instead of bubbles).
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
@@ -14,7 +14,7 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   // -----------------------------------------------------------------------
-  //  (1) CONTROLLERS & FOCUS NODES
+  //  Controllers & Focus
   // -----------------------------------------------------------------------
   final TextEditingController _signInEmail = TextEditingController();
   final TextEditingController _signInPassword = TextEditingController();
@@ -34,13 +34,13 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   bool _isSignUp = false;
 
   // -----------------------------------------------------------------------
-  //  (2) 3D FLIP ANIMATION
+  //  3D Flip
   // -----------------------------------------------------------------------
   late final AnimationController _flipController;
   late final Animation<double> _flipAnimation;
 
   // -----------------------------------------------------------------------
-  //  (3) STAGGERED FORM ANIMATIONS
+  //  Staggered Form Animations
   // -----------------------------------------------------------------------
   late final AnimationController _staggeredController;
   late final Animation<double> _fieldFadeAnimation;
@@ -107,7 +107,6 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
     _flipController.dispose();
     _staggeredController.dispose();
 
-    // Text controllers
     _signInEmail.dispose();
     _signInPassword.dispose();
     _signUpUsername.dispose();
@@ -115,7 +114,6 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
     _signUpPassword.dispose();
     _signUpConfirmPassword.dispose();
 
-    // Focus nodes
     _signInEmailFocus.dispose();
     _signInPasswordFocus.dispose();
     _signUpUsernameFocus.dispose();
@@ -126,9 +124,6 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
     super.dispose();
   }
 
-  // -----------------------------------------------------------------------
-  //  (4) LOGIC: TOGGLE SIGNIN <--> SIGNUP
-  // -----------------------------------------------------------------------
   void _toggleSignInSignUp() {
     FocusScope.of(context).unfocus();
     setState(() {
@@ -141,22 +136,60 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
     });
   }
 
-  // Sign In
+  bool _mockSignInLogic(String email, String password) {
+    // Replace with real server logic
+    return email.isNotEmpty && password.isNotEmpty;
+  }
+
+  // -----------------------------------------------------------------------
+  //  Sign In: calls userContext.login(...) if successful
+  // -----------------------------------------------------------------------
   void _signIn() {
     final email = _signInEmail.text.trim();
     final password = _signInPassword.text.trim();
     debugPrint('Sign In => $email : $password');
-    // TODO: Implement real sign-in logic
+
+    if (_mockSignInLogic(email, password)) {
+      final userCtx = context.read<UserContext>();
+      userCtx.login(
+        userId: '123',
+        userName: 'TestUser',
+        userEmail: email,
+        token: 'fakeToken',
+      );
+      // DO NOT Navigator.push(...) here. The RootPage will auto-redirect.
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Sign In failed. Please try again.')),
+      );
+    }
   }
 
-  // Sign Up
+  // -----------------------------------------------------------------------
+  //  Sign Up: (dummy example, no real logic)
+  // -----------------------------------------------------------------------
   void _signUp() {
     final username = _signUpUsername.text.trim();
     final email = _signUpEmail.text.trim();
     final password = _signUpPassword.text.trim();
     final confirm = _signUpConfirmPassword.text.trim();
     debugPrint('Sign Up => $username, $email, $password, confirm: $confirm');
-    // TODO: Implement real sign-up logic
+
+    // Example check
+    if (username.isNotEmpty && email.isNotEmpty && password == confirm) {
+      // Possibly create account on server, then auto-login:
+      final userCtx = context.read<UserContext>();
+      userCtx.login(
+        userId: '999',
+        userName: username,
+        userEmail: email,
+        token: 'fakeSignUpToken',
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Sign Up failed. Check fields.')),
+      );
+    }
   }
 
   // -----------------------------------------------------------------------
@@ -167,12 +200,10 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
     return Scaffold(
       body: Stack(
         children: [
-          // (1) Billion-dollar wave background (no bubbles)
-          const Positioned.fill(
-            child: BillionOceanBackground(),
-          ),
+          // Billion-dollar wave background
+          const Positioned.fill(child: BillionOceanBackground()),
 
-          // (2) Centered 3D Flip Card — width is fixed, height is dynamic
+          // Centered 3D Flip Card
           Center(
             child: AnimatedBuilder(
               animation: _flipAnimation,
@@ -180,17 +211,15 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                 double angle = _flipAnimation.value * math.pi;
                 bool showSignUp = angle > math.pi / 2;
                 if (angle > math.pi / 2) {
-                  // If angle passes 90°, we flip the 'side'
                   angle = math.pi - angle;
                 }
 
                 return Transform(
                   alignment: Alignment.center,
                   transform: Matrix4.identity()
-                    ..setEntry(3, 2, 0.001) // perspective
+                    ..setEntry(3, 2, 0.001)
                     ..rotateY(angle),
                   child: ConstrainedBox(
-                    // Force a certain width but let height adapt
                     constraints: const BoxConstraints(
                       minWidth: 320,
                       maxWidth: 350,
@@ -206,9 +235,6 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
     );
   }
 
-  // -----------------------------------------------------------------------
-  //  SIGN-IN CARD
-  // -----------------------------------------------------------------------
   Widget _buildSignInCard() {
     return _buildCardBase(
       fields: Column(
@@ -250,9 +276,6 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
     );
   }
 
-  // -----------------------------------------------------------------------
-  //  SIGN-UP CARD
-  // -----------------------------------------------------------------------
   Widget _buildSignUpCard() {
     return _buildCardBase(
       fields: Column(
@@ -307,9 +330,6 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
     );
   }
 
-  // -----------------------------------------------------------------------
-  //  CARD BASE FOR SIGN-IN / SIGN-UP
-  // -----------------------------------------------------------------------
   Widget _buildCardBase({
     required Widget fields,
     required Widget primaryButton,
@@ -330,7 +350,6 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // The fields grow based on the number of inputs
             fields,
             const SizedBox(height: 12),
             primaryButton,
@@ -354,9 +373,6 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
     );
   }
 
-  // -----------------------------------------------------------------------
-  //  SHIMMERING TITLE
-  // -----------------------------------------------------------------------
   Widget _buildShimmerTitle(String text) {
     return CustomPaint(
       key: _shimmerKey,
@@ -369,9 +385,6 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
     );
   }
 
-  // -----------------------------------------------------------------------
-  //  REUSABLE FORM TEXT FIELD
-  // -----------------------------------------------------------------------
   Widget _buildFormTextField({
     required String label,
     required TextEditingController controller,
@@ -394,7 +407,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
           color: colorScheme.onSurfaceVariant.withOpacity(0.7),
         ),
         filled: true,
-        fillColor: colorScheme.surfaceContainerHighest.withOpacity(0.25),
+        fillColor: colorScheme.surface.withOpacity(0.25),
         border: OutlineInputBorder(
           borderSide: BorderSide(
             color: colorScheme.outline.withOpacity(0.5),
@@ -418,9 +431,6 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
     );
   }
 
-  // -----------------------------------------------------------------------
-  //  GLOWING PRIMARY BUTTON
-  // -----------------------------------------------------------------------
   Widget _buildGlowingButton({
     required String text,
     required VoidCallback onPressed,
@@ -452,7 +462,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
-              textStyle: textTheme.labelLarge, // or bodyLarge, etc.
+              textStyle: textTheme.labelLarge,
             ),
             onPressed: onPressed,
             child: Text(text),
@@ -464,10 +474,9 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
 }
 
 // ===========================================================================
-//    B I L L I O N   O C E A N   B A C K G R O U N D  (NO BUBBLES)
-//    + STATIC DECORATIONS
+//  Below this line are all your wave and shimmer painters unchanged
+//  Just copy them from your original code (or the snippet below).
 // ===========================================================================
-
 class BillionOceanBackground extends StatefulWidget {
   const BillionOceanBackground({super.key});
 
@@ -477,9 +486,7 @@ class BillionOceanBackground extends StatefulWidget {
 
 class _BillionOceanBackgroundState extends State<BillionOceanBackground>
     with TickerProviderStateMixin {
-  // One controller for the continuous wave motion (time=0..1 repeated)
   late final AnimationController _waveController;
-  // Another for the "rise from bottom" effect (time=0..1 once)
   late final AnimationController _riseController;
 
   static const int _fullCycleSeconds = 25;
@@ -490,20 +497,16 @@ class _BillionOceanBackgroundState extends State<BillionOceanBackground>
   @override
   void initState() {
     super.initState();
-
-    // Wave controller: loops continuously for the horizontal wave motion
     _waveController = AnimationController(
       vsync: this,
       duration: const Duration(seconds: _fullCycleSeconds),
     )..repeat();
 
-    // Rise controller: runs from 0..1 (a few seconds) to raise the wave
     _riseController = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 3), // e.g. 3s to "rise up"
+      duration: const Duration(seconds: 3),
     )..forward();
 
-    // Generate some static decorations (no bubbles, just shapes)
     _decorations = List.generate(5, (_) => _StaticDecoration.random(_rnd));
   }
 
@@ -517,17 +520,13 @@ class _BillionOceanBackgroundState extends State<BillionOceanBackground>
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-
-    // We use AnimatedBuilder that listens to BOTH wave + rise controllers
     return AnimatedBuilder(
       animation: Listenable.merge([_waveController, _riseController]),
       builder: (_, __) {
         return CustomPaint(
           painter: _BillionWavePainter(
             colorScheme: colorScheme,
-            // "time" is 0..1 repeating for horizontal wave motion
             time: _waveController.value,
-            // "rise" is 0..1 (once) to move wave from bottom -> normal position
             rise: _riseController.value,
             decorations: _decorations,
           ),
@@ -538,14 +537,10 @@ class _BillionOceanBackgroundState extends State<BillionOceanBackground>
   }
 }
 
-// ---------------------------------------------------------------------------
-//  B I L L I O N   W A V E   P A I N T E R
-// ---------------------------------------------------------------------------
-
 class _BillionWavePainter extends CustomPainter {
   final ColorScheme colorScheme;
-  final double time; // 0..1 repeating
-  final double rise; // 0..1 once for the "rise up"
+  final double time;
+  final double rise;
   final List<_StaticDecoration> decorations;
 
   _BillionWavePainter({
@@ -561,10 +556,8 @@ class _BillionWavePainter extends CustomPainter {
       return;
     }
 
-    // 1) Paint background gradient
     _paintDeepGradient(canvas, size);
 
-    // 2) Paint wave layers (with the "rise" factor)
     _drawRealisticWaveLayer(
       canvas,
       size,
@@ -576,7 +569,6 @@ class _BillionWavePainter extends CustomPainter {
       color2: colorScheme.secondary.withOpacity(0.85),
     );
 
-    // Add more layers if you like:
     _drawRealisticWaveLayer(
       canvas,
       size,
@@ -599,7 +591,6 @@ class _BillionWavePainter extends CustomPainter {
       color2: colorScheme.secondary.withOpacity(0.5),
     );
 
-    // 3) Paint static decorations
     _drawStaticDecorations(canvas, size);
   }
 
@@ -614,7 +605,6 @@ class _BillionWavePainter extends CustomPainter {
           colorScheme.surface,
         ],
       ).createShader(rect);
-
     canvas.drawRect(rect, paint);
   }
 
@@ -629,17 +619,10 @@ class _BillionWavePainter extends CustomPainter {
     required Color color2,
   }) {
     final wavePath = Path();
-
-    // The wave starts at the bottom when rise=0,
-    // and ends at baseHeightPct * size.height when rise=1.
-    // So we interpolate from "size.height" down to "size.height*baseHeightPct":
     final double baseHeight =
         size.height - rise * (size.height * (1 - baseHeightPct));
-
-    // Scale the amplitude by rise as well, so at rise=0 wave is flat
     final double actualAmplitude = amplitude * rise;
 
-    // For a seamless loop, define how many full cycles occur per time=0..1
     const int waveCycles = 5;
     final double layerShift = waveCycles * time * size.width;
 
@@ -657,14 +640,12 @@ class _BillionWavePainter extends CustomPainter {
 
     for (int i = 0; i <= steps; i++) {
       final x = i * dx;
-
       final wave1 = math.sin(
         ((x + layerShift) / size.width) * frequencyPrimary * 2 * math.pi,
       );
       final wave2 = math.sin(
         ((x + layerShift) / size.width) * frequencySecondary * 2 * math.pi,
       );
-
       final combinedWave =
           actualAmplitude * 0.7 * wave1 + actualAmplitude * 0.3 * wave2;
 
@@ -672,7 +653,6 @@ class _BillionWavePainter extends CustomPainter {
       wavePath.lineTo(x, y);
     }
 
-    // Close off the path at the bottom
     wavePath.lineTo(size.width, size.height);
     wavePath.lineTo(0, size.height);
     wavePath.close();
@@ -692,7 +672,6 @@ class _BillionWavePainter extends CustomPainter {
       canvas.translate(offset.dx, offset.dy);
       canvas.rotate(angle);
 
-      // Subtle scale pulse
       final scalePulse =
           0.9 + 0.2 * math.sin(time * 2 * math.pi * deco.scaleSpeed);
       canvas.scale(scalePulse);
@@ -727,9 +706,6 @@ class _BillionWavePainter extends CustomPainter {
   }
 }
 
-// -----------------------------------------------------------------------
-//  STATIC DECORATIONS (Simple Model)
-// -----------------------------------------------------------------------
 enum ShapeType { circle, square }
 
 class _StaticDecoration {
@@ -763,11 +739,10 @@ class _StaticDecoration {
       Colors.orange,
     ];
     final color = randomColorChoices[rnd.nextInt(randomColorChoices.length)];
-
     return _StaticDecoration(
       x: rnd.nextDouble(),
       y: rnd.nextDouble(),
-      size: 0.03 + rnd.nextDouble() * 0.05, // 3%..8% of shortest side
+      size: 0.03 + rnd.nextDouble() * 0.05,
       opacity: 0.3 + rnd.nextDouble() * 0.5,
       color: color,
       shapeType: shape,
@@ -777,9 +752,6 @@ class _StaticDecoration {
   }
 }
 
-// ----------------------------------------------------------------------
-//  PREMIUM SHIMMER TEXT PAINTER
-// ----------------------------------------------------------------------
 class ShimmerTextPainter extends CustomPainter {
   final String text;
   final double progress;
@@ -818,10 +790,8 @@ class ShimmerTextPainter extends CustomPainter {
     final dy = (size.height - textHeight) / 2;
     final textOffset = Offset(dx, dy);
 
-    // Draw the base text
     textPainter.paint(canvas, textOffset);
 
-    // Create shimmer highlight rect
     final shimmerRect = Rect.fromLTWH(dx, dy, textWidth, textHeight);
     if (shimmerRect.width <= 0 || shimmerRect.height <= 0) {
       return;
@@ -830,7 +800,6 @@ class ShimmerTextPainter extends CustomPainter {
     final shimmerWidth = shimmerRect.width * 0.7;
     final highlightX = dx + (shimmerRect.width + shimmerWidth) * progress;
 
-    // Shimmer gradient
     final highlightGradient = const LinearGradient(
       colors: [Colors.white10, Colors.white, Colors.white10],
       stops: [0.0, 0.5, 1.0],
@@ -838,7 +807,6 @@ class ShimmerTextPainter extends CustomPainter {
       end: Alignment.centerRight,
     );
 
-    // Shift the gradient so that it moves across the text
     final shiftAmount = highlightX - shimmerWidth;
     final shiftedRect = shimmerRect.shift(Offset(-shiftAmount, 0));
 
@@ -846,7 +814,6 @@ class ShimmerTextPainter extends CustomPainter {
       ..shader = highlightGradient.createShader(shiftedRect)
       ..blendMode = BlendMode.srcIn;
 
-    // Combine with the text
     canvas.saveLayer(shimmerRect, Paint());
     canvas.drawRect(shimmerRect, shimmerPaint);
     canvas.restore();

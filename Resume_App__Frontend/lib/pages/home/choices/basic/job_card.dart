@@ -33,7 +33,6 @@ class JobCardState extends State<JobCard> {
 
     // Grab color scheme & text theme from the current theme
     final colorScheme = Theme.of(context).colorScheme;
-    final textTheme = Theme.of(context).textTheme;
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),

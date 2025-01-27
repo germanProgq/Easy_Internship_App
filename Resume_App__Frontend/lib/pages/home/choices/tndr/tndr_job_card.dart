@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'dart:math' as math;
+
 import '../components/job_card/model/job.dart';
 
 class TinderJobCard extends StatefulWidget {
@@ -7,24 +9,31 @@ class TinderJobCard extends StatefulWidget {
   final VoidCallback? onDecline;
 
   const TinderJobCard({
-    super.key,
+    Key? key,
     required this.job,
     this.onLike,
     this.onDecline,
-  });
+  }) : super(key: key);
 
   @override
   State<TinderJobCard> createState() => _TinderJobCardState();
 }
 
 class _TinderJobCardState extends State<TinderJobCard>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   /// Tracks the user’s drag along X-Y
   Offset _dragOffset = Offset.zero;
 
-  /// Controls spring-back or fling animations
+  /// Controls spring-back or fling animations (swipe logic)
   late AnimationController _controller;
   late Animation<Offset> _animation;
+
+  /// Controls the wave in the subtle background
+  late AnimationController _waveController;
+  late Animation<double> _waveAnimation;
+
+  /// Controls a gentle scale “pop-in” effect
+  late Animation<double> _scaleAnimation;
 
   /// Distance beyond which a swipe is considered final
   final double _swipeThreshold = 120.0;
@@ -33,9 +42,25 @@ class _TinderJobCardState extends State<TinderJobCard>
   void initState() {
     super.initState();
 
+    // Swipe controller
     _controller = AnimationController(
       duration: const Duration(milliseconds: 300),
       vsync: this,
+    );
+
+    // Wave controller (looping subtle wave)
+    _waveController = AnimationController(
+      duration: const Duration(seconds: 3),
+      vsync: this,
+    )..repeat(reverse: true);
+
+    _waveAnimation = Tween<double>(begin: 0, end: 2 * math.pi).animate(
+      CurvedAnimation(parent: _waveController, curve: Curves.easeInOut),
+    );
+
+    // Subtle scale in effect for the card
+    _scaleAnimation = Tween<double>(begin: 0.97, end: 1.0).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeOut),
     );
 
     _animation = Tween<Offset>(
@@ -45,18 +70,24 @@ class _TinderJobCardState extends State<TinderJobCard>
       CurvedAnimation(parent: _controller, curve: Curves.easeOut),
     );
 
-    // Reset drag offset when animation completes
+    // Reset drag offset when the swipe animation completes
     _controller.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
         setState(() => _dragOffset = Offset.zero);
         _controller.reset();
       }
     });
+
+    // Begin the small scale “pop-in” after the widget builds
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _controller.forward(from: 0.0);
+    });
   }
 
   @override
   void dispose() {
     _controller.dispose();
+    _waveController.dispose();
     super.dispose();
   }
 
@@ -88,7 +119,7 @@ class _TinderJobCardState extends State<TinderJobCard>
       begin: _dragOffset,
       end: targetOffset,
     ).animate(_controller);
-    _controller.forward();
+    _controller.forward(from: 0.0);
   }
 
   void _springBack() {
@@ -96,7 +127,7 @@ class _TinderJobCardState extends State<TinderJobCard>
       begin: _dragOffset,
       end: Offset.zero,
     ).animate(_controller);
-    _controller.forward();
+    _controller.forward(from: 0.0);
   }
 
   // --------------------------------------------------------------------------
@@ -192,14 +223,20 @@ class _TinderJobCardState extends State<TinderJobCard>
     const double rotationFactor = 0.003;
     final double rotation = rotationFactor * _dragOffset.dx;
 
+    // A small parallax effect for the company logo
+    final double logoParallax = _dragOffset.dx * 0.02;
+
     return AnimatedBuilder(
-      animation: _animation,
+      animation: Listenable.merge([_animation, _scaleAnimation]),
       builder: (context, child) {
         return Transform.translate(
           offset: _animation.value,
           child: Transform.rotate(
             angle: rotation,
-            child: child,
+            child: Transform.scale(
+              scale: _scaleAnimation.value,
+              child: child,
+            ),
           ),
         );
       },
@@ -207,124 +244,143 @@ class _TinderJobCardState extends State<TinderJobCard>
         onPanUpdate: _onPanUpdate,
         onPanEnd: _onPanEnd,
         onTap: _showMoreJobInfo, // Tapping shows bottom sheet
-        child: Container(
-          width: cardWidth,
-          height: cardHeight,
-          decoration: BoxDecoration(
-            color: colorScheme.surfaceContainerHighest,
-            borderRadius: BorderRadius.circular(16.0),
-            // If job is premium, add a subtle gold border
-            border: widget.job.isPremium
-                ? Border.all(
-                    color: Colors.amberAccent.shade200,
-                    width: 2,
-                  )
-                : null,
-            boxShadow: [
-              BoxShadow(
-                color: colorScheme.shadow.withOpacity(0.4),
-                spreadRadius: 1,
-                blurRadius: 10,
-                offset: const Offset(0, 4),
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            // Subtle animated water background behind the card
+            // Just for an overall watery vibe
+            CustomPaint(
+              painter: WaterBackgroundPainter(_waveAnimation),
+              child: SizedBox(
+                width: cardWidth,
+                height: cardHeight,
               ),
-            ],
-          ),
-          child: Stack(
-            children: [
-              // Main content
-              Center(
-                child: SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const SizedBox(height: 20),
-                        // Company Logo
-                        _buildCompanyLogo(colorScheme),
-                        const SizedBox(height: 16.0),
-                        // Job Details
-                        _buildJobDetails(textTheme, colorScheme),
-                        const SizedBox(height: 20),
-                        ElevatedButton(
-                          onPressed: _showMoreJobInfo,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: colorScheme.primaryContainer,
-                            foregroundColor: colorScheme.onPrimaryContainer,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                          ),
-                          child: const Text('View Details'),
-                        ),
-                        const SizedBox(height: 20),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
+            ),
 
-              // If premium, place a gold "PREMIUM" badge top-left
-              if (widget.job.isPremium)
-                Positioned(
-                  top: 12,
-                  left: 12,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 4,
-                      horizontal: 8,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.amber.shade600,
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Text(
-                      'PREMIUM',
-                      style: textTheme.bodySmall?.copyWith(
-                        fontWeight: FontWeight.w700,
-                        color: Colors.white,
+            // Actual card content
+            Container(
+              width: cardWidth,
+              height: cardHeight,
+              decoration: BoxDecoration(
+                color: colorScheme.surface.withOpacity(0.90),
+                borderRadius: BorderRadius.circular(16.0),
+                // If job is premium, add a subtle gold border
+                border: widget.job.isPremium
+                    ? Border.all(
+                        color: Colors.amberAccent.shade200,
+                        width: 2,
+                      )
+                    : null,
+                boxShadow: [
+                  BoxShadow(
+                    color: colorScheme.shadow.withOpacity(0.4),
+                    spreadRadius: 1,
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: Stack(
+                children: [
+                  // Main content
+                  Center(
+                    child: SingleChildScrollView(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const SizedBox(height: 20),
+                            // Company Logo with subtle parallax shift
+                            Transform.translate(
+                              offset: Offset(logoParallax, 0),
+                              child: _buildCompanyLogo(colorScheme),
+                            ),
+                            const SizedBox(height: 16.0),
+                            // Job Details
+                            _buildJobDetails(textTheme, colorScheme),
+                            const SizedBox(height: 20),
+                            ElevatedButton(
+                              onPressed: _showMoreJobInfo,
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: colorScheme.primaryContainer,
+                                foregroundColor: colorScheme.onPrimaryContainer,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                              ),
+                              child: const Text('View Details'),
+                            ),
+                            const SizedBox(height: 20),
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
 
-              // Decline button (bottom-left)
-              Positioned(
-                bottom: 16,
-                left: 16,
-                child: GestureDetector(
-                  onTap: widget.onDecline,
-                  child: CircleAvatar(
-                    radius: 28,
-                    backgroundColor: colorScheme.error,
-                    child: Icon(
-                      Icons.close,
-                      color: colorScheme.onError,
-                      size: 28,
+                  // If premium, place a gold "PREMIUM" badge top-left
+                  if (widget.job.isPremium)
+                    Positioned(
+                      top: 12,
+                      left: 12,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 4,
+                          horizontal: 8,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.amber.shade600,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Text(
+                          'PREMIUM',
+                          style: textTheme.bodySmall?.copyWith(
+                            fontWeight: FontWeight.w700,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+
+                  // Decline button (bottom-left)
+                  Positioned(
+                    bottom: 16,
+                    left: 16,
+                    child: GestureDetector(
+                      onTap: widget.onDecline,
+                      child: CircleAvatar(
+                        radius: 28,
+                        backgroundColor: colorScheme.error,
+                        child: Icon(
+                          Icons.close,
+                          color: colorScheme.onError,
+                          size: 28,
+                        ),
+                      ),
                     ),
                   ),
-                ),
-              ),
 
-              // Like button (bottom-right)
-              Positioned(
-                bottom: 16,
-                right: 16,
-                child: GestureDetector(
-                  onTap: widget.onLike,
-                  child: CircleAvatar(
-                    radius: 28,
-                    backgroundColor: colorScheme.primary,
-                    child: Icon(
-                      Icons.check,
-                      color: colorScheme.onPrimary,
-                      size: 28,
+                  // Like button (bottom-right)
+                  Positioned(
+                    bottom: 16,
+                    right: 16,
+                    child: GestureDetector(
+                      onTap: widget.onLike,
+                      child: CircleAvatar(
+                        radius: 28,
+                        backgroundColor: colorScheme.primary,
+                        child: Icon(
+                          Icons.check,
+                          color: colorScheme.onPrimary,
+                          size: 28,
+                        ),
+                      ),
                     ),
                   ),
-                ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -362,7 +418,6 @@ class _TinderJobCardState extends State<TinderJobCard>
   }
 
   Widget _buildJobDetails(TextTheme textTheme, ColorScheme colorScheme) {
-    // If job is premium, override salary with $1,000,000
     final displaySalary = (widget.job.salary ?? 'Salary Info Not Provided');
 
     return Column(
@@ -429,4 +484,43 @@ class _TinderJobCardState extends State<TinderJobCard>
       ],
     );
   }
+}
+
+/// A subtle painter that draws and animates a "wave" background.
+/// The wave shifts horizontally based on [animation.value].
+class WaterBackgroundPainter extends CustomPainter {
+  final Animation<double> animation;
+
+  WaterBackgroundPainter(this.animation) : super(repaint: animation);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = Colors.blue.withOpacity(0.05)
+      ..style = PaintingStyle.fill;
+
+    // You can tweak the amplitude, wavelength, etc. to control how “watery” it looks
+    final amplitude = 6.0;
+    final wavelength = size.width / 1.5;
+    final yCenter = size.height / 2;
+
+    final path = Path()..moveTo(0, yCenter);
+
+    // Create a simple sine wave
+    for (double x = 0; x <= size.width; x += 1) {
+      final y = amplitude *
+              math.sin((x / wavelength * 2 * math.pi) + animation.value) +
+          yCenter;
+      path.lineTo(x, y);
+    }
+
+    path.lineTo(size.width, size.height);
+    path.lineTo(0, size.height);
+    path.close();
+
+    canvas.drawPath(path, paint);
+  }
+
+  @override
+  bool shouldRepaint(covariant WaterBackgroundPainter oldDelegate) => true;
 }

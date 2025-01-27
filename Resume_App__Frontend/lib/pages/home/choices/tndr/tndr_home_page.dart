@@ -1,86 +1,82 @@
-// lib/screens/tndr_home_page.dart
-
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'tndr_job_card.dart';
 import '../../../../../app/styles/app_colors.dart';
 import '../components/job_card/model/job.dart';
 
-// PREMIUM: Hypothetical classes to illustrate "big budget" features.
-class PremiumJobScraper {
+/// Subtle job scraper (unchanged from original logic)
+class DeepDiveJobScraper {
   Future<List<Job>> scrapeLatestJobs() async {
     await Future.delayed(const Duration(milliseconds: 500));
     return [
       Job(
         id: 101,
         title: 'Senior Flutter Developer',
-        company: 'LuxTech Global',
-        location: 'Remote USA',
+        company: 'AquaTech Global',
+        location: 'Remote Oceanic',
         salary: '\$180,000/year',
         companyLogo: 'https://picsum.photos/seed/101/200/200',
         isPremium: true,
         description:
-            'Join our elite team to build gorgeous Flutter apps with elegance and style. This is a premium role with unmatched benefits.',
+            'Join our deep dive into Flutter’s ocean of possibilities. Build immersive, fluid UIs with advanced techniques.',
       ),
       Job(
         id: 102,
         title: 'AI Engineer',
-        company: 'DeepFuture Inc.',
-        location: 'San Francisco, CA',
+        company: 'BlueFuture Inc.',
+        location: 'San Francisco Bay',
         salary: '\$220,000/year + Equity',
         companyLogo: 'https://picsum.photos/seed/102/200/200',
         description:
-            'Work on cutting-edge ML and AI pipelines. Automated data flows, advanced model training, everything you dream of in AI.',
+            'Work on state-of-the-art ML pipelines, training models to track and analyze marine data flows.',
       ),
     ];
   }
 }
 
-// PREMIUM: A class that automatically fills out job applications
-class AutoJobFiller {
+class AquaJobFiller {
   Future<void> fillApplication(Job job) async {
     await Future.delayed(const Duration(seconds: 1));
-    // Imagine hooking into real forms, etc.
+    // In real life, this might fill forms automatically, etc.
   }
 }
 
-// Combine sample jobs with newly scraped jobs
 Future<List<Job>> fetchJobs() async {
-  final premiumScraper = PremiumJobScraper();
+  final deepDiveScraper = DeepDiveJobScraper();
   final localJobs = <Job>[
     Job(
       id: 1,
       title: 'Flutter Developer',
-      company: 'CoolApps Inc.',
+      company: 'CoralApps Inc.',
       location: 'Remote',
       salary: '\$85,000/year',
       companyLogo: 'https://picsum.photos/seed/1/200/200',
       description:
-          'Build cross-platform mobile apps using Flutter. Work closely with a team of developers and designers.',
+          'Build cross-platform mobile apps in Flutter. Collaborate on a team that cares about fluid UIs.',
     ),
     Job(
       id: 2,
       title: 'Frontend Engineer',
-      company: 'Webify',
+      company: 'Waveify',
       location: 'New York, NY',
       salary: '\$100,000/year',
       companyLogo: 'https://picsum.photos/seed/2/200/200',
       description:
-          'Implement responsive UIs with React and TypeScript. Collaborate with designers to deliver polished user experiences.',
+          'Develop modern React-based UIs with an emphasis on wave-like transitions and watery animations.',
     ),
     Job(
       id: 3,
       title: 'DevOps Specialist',
-      company: 'CloudOps',
+      company: 'CloudOcean',
       location: 'Seattle, WA',
       salary: '\$135,000/year',
       companyLogo: 'https://picsum.photos/seed/3/200/200',
       description:
-          'Manage CI/CD pipelines, optimize Kubernetes clusters, and maintain cloud infrastructure for high-traffic applications.',
+          'Manage CI/CD pipelines, optimize container orchestration, and navigate complex cloud “seas.”',
     ),
   ];
 
-  final scrapedJobs = await premiumScraper.scrapeLatestJobs();
+  final scrapedJobs = await deepDiveScraper.scrapeLatestJobs();
   return [...localJobs, ...scrapedJobs];
 }
 
@@ -93,35 +89,26 @@ class TndrHomePage extends StatefulWidget {
 
 class _TndrHomePageState extends State<TndrHomePage>
     with TickerProviderStateMixin {
-  // Make this nullable, so we can show a loading state until it's ready.
   List<Job>? _jobs;
-
-  // Which job we're currently showing
   int _currentIndex = 0;
-
-  // Horizontal drag offset
   Offset _dragOffset = Offset.zero;
 
-  // Swipe thresholds
   final double _swipeThreshold = 150.0;
   final double _minimalDrag = 20.0;
 
   bool _canMove = false;
   bool _isAnimating = false;
 
-  // Animations for snapping back or swiping off-screen
   late AnimationController _swipeController;
   late Animation<Offset> _swipeAnimation;
 
-  // Background animations
-  late AnimationController _bubblesController;
-  late AnimationController _sparkleController;
+  /// Slowed wave animations for subtle effect
+  late AnimationController _waveController;
+  late AnimationController _rippleController;
 
-  // Maximum rotation angle (~14 degrees)
   final double _maxRotation = 0.25;
 
-  // Premium auto-filler
-  final AutoJobFiller _autoFiller = AutoJobFiller();
+  final AquaJobFiller _autoFiller = AquaJobFiller();
 
   // Overlays for LIKE/NOPE
   late AnimationController _likeFadeController;
@@ -132,11 +119,8 @@ class _TndrHomePageState extends State<TndrHomePage>
   @override
   void initState() {
     super.initState();
-
-    // Start loading jobs
     _initializeJobs();
 
-    // Swipe animations
     _swipeController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 400),
@@ -155,7 +139,6 @@ class _TndrHomePageState extends State<TndrHomePage>
           if (_jobs != null && _currentIndex < _jobs!.length) {
             _currentIndex++;
           }
-          // Reset
           _dragOffset = Offset.zero;
           _canMove = false;
           _isAnimating = false;
@@ -164,24 +147,25 @@ class _TndrHomePageState extends State<TndrHomePage>
       }
     });
 
-    // Background animations
-    _bubblesController = AnimationController(
+    /// Slower, more subtle wave animations
+    _waveController = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 15),
+      duration: const Duration(seconds: 12), // slowed from 8 to 12
     )..repeat();
 
-    _sparkleController = AnimationController(
+    /// Gentle ripple, also slowed
+    _rippleController = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 10),
+      duration: const Duration(seconds: 8), // slowed from 5 to 8
     )..repeat(reverse: true);
 
-    // Fade animations for LIKE/NOPE
     _likeFadeController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 200),
       lowerBound: 0,
       upperBound: 1,
     );
+
     _nopeFadeController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 200),
@@ -193,6 +177,7 @@ class _TndrHomePageState extends State<TndrHomePage>
       parent: _likeFadeController,
       curve: Curves.easeIn,
     );
+
     _nopeOpacity = CurvedAnimation(
       parent: _nopeFadeController,
       curve: Curves.easeIn,
@@ -209,8 +194,8 @@ class _TndrHomePageState extends State<TndrHomePage>
   @override
   void dispose() {
     _swipeController.dispose();
-    _bubblesController.dispose();
-    _sparkleController.dispose();
+    _waveController.dispose();
+    _rippleController.dispose();
     _likeFadeController.dispose();
     _nopeFadeController.dispose();
     super.dispose();
@@ -233,6 +218,7 @@ class _TndrHomePageState extends State<TndrHomePage>
         _canMove = true;
       });
     }
+
     if (_canMove) {
       setState(() {
         _dragOffset += Offset(details.delta.dx, 0.0);
@@ -277,14 +263,12 @@ class _TndrHomePageState extends State<TndrHomePage>
     _swipeAnimation = Tween<Offset>(
       begin: _dragOffset,
       end: endOffset,
-    ).animate(CurvedAnimation(
-      parent: _swipeController,
-      curve: Curves.easeOut,
-    ));
+    ).animate(
+      CurvedAnimation(parent: _swipeController, curve: Curves.easeOut),
+    );
 
     _swipeController.forward().then((_) async {
       if (swipeRight && _jobs != null && _currentIndex < _jobs!.length) {
-        // Auto-fill if liked
         await _autoFiller.fillApplication(_jobs![_currentIndex]);
       }
     });
@@ -297,10 +281,9 @@ class _TndrHomePageState extends State<TndrHomePage>
     _swipeAnimation = Tween<Offset>(
       begin: _dragOffset,
       end: Offset.zero,
-    ).animate(CurvedAnimation(
-      parent: _swipeController,
-      curve: Curves.easeOut,
-    ));
+    ).animate(
+      CurvedAnimation(parent: _swipeController, curve: Curves.easeOut),
+    );
     _swipeController.forward().then((_) {
       _likeFadeController.reverse();
       _nopeFadeController.reverse();
@@ -317,7 +300,6 @@ class _TndrHomePageState extends State<TndrHomePage>
 
   @override
   Widget build(BuildContext context) {
-    // If jobs haven't loaded yet, show a loading spinner
     if (_jobs == null) {
       return Scaffold(
         backgroundColor: AppColors.background,
@@ -328,27 +310,28 @@ class _TndrHomePageState extends State<TndrHomePage>
     return Scaffold(
       backgroundColor: AppColors.background,
       body: LayoutBuilder(
-        builder: (_, constraints) {
-          // If there's no space to paint, just show an empty Container
+        builder: (context, constraints) {
           if (constraints.maxWidth == 0 || constraints.maxHeight == 0) {
             return Container();
           }
           return Stack(
             children: [
+              // Subtle watery background
               AnimatedBuilder(
                 animation:
-                    Listenable.merge([_bubblesController, _sparkleController]),
-                builder: (_, __) => CustomPaint(
-                  painter: PremiumBackgroundPainter(
-                    bubbleValue: _bubblesController.value,
-                    sparkleValue: _sparkleController.value,
-                  ),
-                  child: SizedBox(
-                    // Ensure the child has the full available size
-                    width: constraints.maxWidth,
-                    height: constraints.maxHeight,
-                  ),
-                ),
+                    Listenable.merge([_waveController, _rippleController]),
+                builder: (context, _) {
+                  return CustomPaint(
+                    painter: AquaBackgroundPainter(
+                      waveValue: _waveController.value,
+                      rippleValue: _rippleController.value,
+                    ),
+                    child: SizedBox(
+                      width: constraints.maxWidth,
+                      height: constraints.maxHeight,
+                    ),
+                  );
+                },
               ),
               Center(
                 child: _currentIndex < _jobs!.length
@@ -372,13 +355,17 @@ class _TndrHomePageState extends State<TndrHomePage>
       onPanEnd: _onPanEnd,
       child: AnimatedBuilder(
         animation: _swipeController,
-        builder: (context, child) {
+        builder: (_, child) {
           final swipeOffset = _swipeAnimation.value;
+          final scale = 1.0 - (_dragOffset.dx.abs() / 2000.0).clamp(0.0, 0.05);
           return Transform.translate(
             offset: _dragOffset + swipeOffset,
             child: Transform.rotate(
               angle: rotation,
-              child: child,
+              child: Transform.scale(
+                scale: scale,
+                child: child,
+              ),
             ),
           );
         },
@@ -475,7 +462,7 @@ class _TndrHomePageState extends State<TndrHomePage>
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
-            "End of the Line!",
+            "You’ve reached the shore!",
             style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.bold,
@@ -491,7 +478,7 @@ class _TndrHomePageState extends State<TndrHomePage>
           ),
           SizedBox(height: 16),
           Text(
-            "No more premium jobs at the moment. Check back soon for more opportunities!",
+            "No more jobs in this ocean at the moment.\nCome back later for new waves!",
             style: TextStyle(fontSize: 16),
             textAlign: TextAlign.center,
           ),
@@ -501,54 +488,90 @@ class _TndrHomePageState extends State<TndrHomePage>
   }
 }
 
-// Premium background painter that draws floating bubbles and sparkles
-class PremiumBackgroundPainter extends CustomPainter {
-  final double bubbleValue;
-  final double sparkleValue;
-  PremiumBackgroundPainter({
-    required this.bubbleValue,
-    required this.sparkleValue,
+/// A more subtle background painter that draws gentle waves, fewer bubbles, and faint ripples.
+class AquaBackgroundPainter extends CustomPainter {
+  final double waveValue;
+  final double rippleValue;
+
+  const AquaBackgroundPainter({
+    required this.waveValue,
+    required this.rippleValue,
   });
 
   @override
   void paint(Canvas canvas, Size size) {
-    if (size.width <= 0 || size.height <= 0) {
-      // If there's literally no size to paint, just return.
-      return;
-    }
+    if (size.width <= 0 || size.height <= 0) return;
 
-    _drawBubbles(canvas, size);
-    _drawSparkles(canvas, size);
+    _drawWaves(canvas, size);
+    _drawFewerBubbles(canvas, size);
+    _drawSoftRipples(canvas, size);
   }
 
-  void _drawBubbles(Canvas canvas, Size size) {
-    final paint = Paint()..color = Colors.white.withOpacity(0.06);
+  /// Much smaller wave amplitude and more transparency
+  void _drawWaves(Canvas canvas, Size size) {
+    final wavePaint = Paint()
+      ..color = Colors.blueAccent.withOpacity(0.07) // more subtle
+      ..style = PaintingStyle.fill;
+
+    // Draw only 2 wave layers with small amplitude
+    for (int i = 0; i < 2; i++) {
+      final path = Path();
+      final waveHeight = 5.0 + i * 3.0; // very small wave amplitude
+      final yOffset = size.height * 0.7 + i * 20.0; // slightly lower
+
+      path.moveTo(0, yOffset);
+      for (double x = 0; x <= size.width; x += 10) {
+        final theta =
+            (x / size.width * 2 * math.pi) + (waveValue * 2 * math.pi) + i;
+        final y = yOffset + math.sin(theta) * waveHeight;
+        path.lineTo(x, y);
+      }
+
+      path.lineTo(size.width, size.height);
+      path.lineTo(0, size.height);
+      path.close();
+
+      canvas.drawPath(path, wavePaint);
+    }
+  }
+
+  /// Reduced bubble count and less alpha
+  void _drawFewerBubbles(Canvas canvas, Size size) {
+    final bubblePaint = Paint()..color = Colors.white.withOpacity(0.03);
     final rng = math.Random(42);
-    for (int i = 0; i < 20; i++) {
+
+    // Only 6 bubbles
+    for (int i = 0; i < 6; i++) {
       final dx = rng.nextDouble() * size.width;
       final baseDy = rng.nextDouble() * size.height;
-      final dy = baseDy - (bubbleValue * 50 * (i % 5));
-      final radius = 15 + 25.0 * rng.nextDouble();
-      canvas.drawCircle(Offset(dx, dy), radius, paint);
+      // Even smaller vertical displacement
+      final dy = baseDy - (waveValue * 50 * (i + 1) % (size.height + 50));
+      final radius = 6 + 10.0 * rng.nextDouble(); // smaller radius
+
+      canvas.drawCircle(Offset(dx, dy), radius, bubblePaint);
     }
   }
 
-  void _drawSparkles(Canvas canvas, Size size) {
-    final sparklePaint = Paint()..color = Colors.amber.withOpacity(0.3);
+  /// Reduced ripple count and opacity
+  void _drawSoftRipples(Canvas canvas, Size size) {
+    final ripplePaint = Paint()
+      ..color = Colors.lightBlueAccent.withOpacity(0.1);
     final rng = math.Random(84);
-    for (int i = 0; i < 10; i++) {
+
+    // Only 3 ripples
+    for (int i = 0; i < 3; i++) {
       final dx = rng.nextDouble() * size.width;
       final dy = rng.nextDouble() * size.height;
-      // Flicker in size
-      final sparkleSize =
-          5 + 20 * (0.5 + 0.5 * math.sin(sparkleValue * math.pi * 2));
-      canvas.drawCircle(Offset(dx, dy), sparkleSize, sparklePaint);
+      final rippleSize = 10 +
+          20 * (0.5 + 0.5 * math.sin(rippleValue * math.pi * 2)); // smaller
+
+      canvas.drawCircle(Offset(dx, dy), rippleSize, ripplePaint);
     }
   }
 
   @override
-  bool shouldRepaint(covariant PremiumBackgroundPainter oldDelegate) {
-    return oldDelegate.bubbleValue != bubbleValue ||
-        oldDelegate.sparkleValue != sparkleValue;
+  bool shouldRepaint(covariant AquaBackgroundPainter oldDelegate) {
+    return oldDelegate.waveValue != waveValue ||
+        oldDelegate.rippleValue != rippleValue;
   }
 }
